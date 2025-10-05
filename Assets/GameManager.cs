@@ -7,17 +7,54 @@ using System.IO;
 
 public class GameManager : Singleton<GameManager>
 {
-    public string playerName;
-    public int health;
-    public int xp;
-    public int score;
-    public int coins;
-    public int lives;
+    private string playerName;
+    private int health;
+    private int xp;
+    private int score;
+    private int coins;
+    private int lives;
 
-    private void Awake()
+    public string PlayerName 
+    {  
+        get { return playerName; } 
+        set { playerName = value; } 
+    }
+    public int Health 
     {
-        Debug.Log("switched scene to persistent scene");
-        SceneManager.LoadScene("PersistentScene", LoadSceneMode.Additive);
+        get { return health; }
+        set { health = Mathf.Max(0,value); }
+    }
+    public int Xp 
+    {  
+        get { return xp; }
+        set { xp = Mathf.Max(0,value); }
+    }
+    public int Score 
+    {  
+        get { return score; }
+        set { score = Mathf.Max(0, value); }
+    }
+    public int Coins 
+    {  
+        get { return coins; } 
+        set { coins  = Mathf.Max(0, value); }
+    }
+    public int Lives 
+    { 
+        get { return lives; } 
+        set { lives  = Mathf.Max(0, value); }
+    }
+
+    
+    private void Start()
+    {
+        /*
+        if (!SceneManager.GetSceneByName("PersistentScene").isLoaded)
+        {
+            Debug.Log("Loading scene to persistent scene");
+            SceneManager.LoadScene("PersistentScene", LoadSceneMode.Additive);
+        }
+        */
     }
 
     // Update is called once per frame
@@ -70,12 +107,12 @@ public class GameManager : Singleton<GameManager>
         FileStream file = File.Create(Application.persistentDataPath + "/playerinfo.dat");
 
         PlayerData data = new PlayerData();
-        data.playerName = playerName;
-        data.health = health;
-        data.xp = xp;
-        data.score = score;
-        data.coins = coins;
-        data.lives = lives;
+        data.playerName = PlayerName;
+        data.health = Health;
+        data.xp = Xp;
+        data.score = Score;
+        data.coins = Coins;
+        data.lives = Lives;
 
         // Takes the data and applies it to the new file 
         bf.Serialize(file, data);
@@ -93,12 +130,12 @@ public class GameManager : Singleton<GameManager>
             // Storing my data | casting my data into a playerdata object | copy the data also
             PlayerData data = (PlayerData)bf.Deserialize(file);
             file.Close();
-            playerName = data.playerName;
-            health = data.health;
-            xp = data.xp;
-            score = data.score;
-            coins = data.coins;
-            lives = data.lives;
+            PlayerName = data.playerName;
+            Health = data.health;
+            Xp = data.xp;
+            Score = data.score;
+            Coins = data.coins;
+            Lives = data.lives;
 
         }
         else
