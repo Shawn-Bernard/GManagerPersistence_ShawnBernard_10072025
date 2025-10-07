@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Singleton<Type> : MonoBehaviour where Type : MonoBehaviour
 {
+    [SerializeField] bool canDestroy = true;
+
     static Type instance;
     public static Type Instance
     {
@@ -20,11 +22,6 @@ public class Singleton<Type> : MonoBehaviour where Type : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        InstanceCheck();
-    }
-
     private void Start()
     {
         InstanceCheck();
@@ -32,16 +29,23 @@ public class Singleton<Type> : MonoBehaviour where Type : MonoBehaviour
 
     void InstanceCheck()
     {
-        if (instance != null)
+        if (canDestroy)
         {
-            Destroy(this.gameObject);
-            return;
+            if (instance != null)
+            {
+                Destroy(this.gameObject);
+                return;
+            }
+            else
+            {
+                DontDestroyOnLoad(this.gameObject);
+            }
+
+            instance = this as Type;
         }
         else
         {
-            DontDestroyOnLoad(this.gameObject);
+            Debug.Log("Can't destroy self");
         }
-
-        instance = this as Type;
     }
 }

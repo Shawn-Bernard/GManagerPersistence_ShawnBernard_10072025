@@ -7,6 +7,8 @@ using System.IO;
 
 public class GameManager : Singleton<GameManager>
 {
+
+
     public static int gameManagerCount;
 
     private string playerName;
@@ -100,14 +102,17 @@ public class GameManager : Singleton<GameManager>
         }
         */
     }
+
     public void SaveGame()
     {
+        // Binary converter
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + playerInfoPath);
+
+        // Crates a new file
+        FileStream file = File.Create(Application.persistentDataPath + playerInfoPath);// playerInfoPath = "/playerinfo.data"
 
         PlayerData data = new PlayerData();
-
-        //Saving my data 
+        // Saving my data 
         data.playerName = PlayerName;
         data.health = Health;
         data.xp = Xp;
@@ -117,12 +122,16 @@ public class GameManager : Singleton<GameManager>
 
         // Takes the data and applies it to the new file 
         bf.Serialize(file, data);
+        // Then closes the file
         file.Close();
     }
 
     public void LoadSave()
     {
+        //Making a string with persistant data path + player info string path 
         string path = Application.persistentDataPath + playerInfoPath;
+
+        //Checks to see if the file exists
         if (File.Exists(path))
         {
             BinaryFormatter bf = new BinaryFormatter();
@@ -131,6 +140,8 @@ public class GameManager : Singleton<GameManager>
             // Storing my data | casting my data into a playerdata object | copy the data also
             PlayerData data = (PlayerData)bf.Deserialize(file);
             file.Close();
+
+            // Sets my loaded data into the real player data
             PlayerName = data.playerName;
             Health = data.health;
             Xp = data.xp;
@@ -156,7 +167,8 @@ public class GameManager : Singleton<GameManager>
         Lives = 0;
     }
 }
-// This let the data made into a file
+
+// This let the data made into a file/ makes it serializable
 [System.Serializable]
 public class PlayerData
 {
@@ -166,7 +178,5 @@ public class PlayerData
     public int score;
     public int coins;
     public int lives;
-    
-
 }
 
