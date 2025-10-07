@@ -5,6 +5,9 @@ using TMPro;
 public class SceneLoader : MonoBehaviour
 {
     public TextMeshProUGUI sceneUI;
+
+    public TextMeshProUGUI gameManagerCount;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -20,5 +23,10 @@ public class SceneLoader : MonoBehaviour
     void Update()
     {
         sceneUI.text = SceneManager.GetActiveScene().name;
+        if (GameManager.Instance != null) 
+        {
+            gameManagerCount.text = $"GM Count: {GameManager.Instance.GetManagerCount().ToString()}";
+        }
+        
     }
 }

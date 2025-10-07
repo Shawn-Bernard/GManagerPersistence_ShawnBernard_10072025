@@ -51,6 +51,7 @@ public class UIManager : MonoBehaviour
         else
         {
             nameInput.gameObject.SetActive(false);
+            nameInput.onEndEdit.RemoveListener(ChangeName);
         }
     }
 

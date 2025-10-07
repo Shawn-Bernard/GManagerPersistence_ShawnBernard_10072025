@@ -7,12 +7,16 @@ using System.IO;
 
 public class GameManager : Singleton<GameManager>
 {
+    public static int gameManagerCount;
+
     private string playerName;
     private int health;
     private int xp;
     private int score;
     private int coins;
     private int lives;
+
+    private string playerInfoPath = "/playerinfo.data";
 
     public string PlayerName 
     {  
@@ -45,16 +49,19 @@ public class GameManager : Singleton<GameManager>
         set { lives  = Mathf.Max(0, value); }
     }
 
-    
-    private void Start()
+    public int GetManagerCount()
     {
-        /*
-        if (!SceneManager.GetSceneByName("PersistentScene").isLoaded)
-        {
-            Debug.Log("Loading scene to persistent scene");
-            SceneManager.LoadScene("PersistentScene", LoadSceneMode.Additive);
-        }
-        */
+        return gameManagerCount;
+    }
+
+    private void OnDestroy()
+    {
+        gameManagerCount--;
+    }
+
+    private void Awake()
+    {
+        gameManagerCount++;
     }
 
     // Update is called once per frame
@@ -80,6 +87,7 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("switched scene to level 3");
             SceneManager.LoadScene(3);
         }
+        /*
         if (Keyboard.current[Key.S].wasPressedThisFrame)
         {
             Debug.Log("Saving game");
@@ -90,23 +98,16 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("Loading game data");
             LoadSave();
         }
-    }
-
-    private void OnEnable()
-    {
-        
-    }
-
-    private void OnDisable()
-    {
-        
+        */
     }
     public void SaveGame()
     {
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/playerinfo.dat");
+        FileStream file = File.Create(Application.persistentDataPath + playerInfoPath);
 
         PlayerData data = new PlayerData();
+
+        //Saving my data 
         data.playerName = PlayerName;
         data.health = Health;
         data.xp = Xp;
@@ -121,7 +122,7 @@ public class GameManager : Singleton<GameManager>
 
     public void LoadSave()
     {
-        string path = Application.persistentDataPath + "/playerinfo.dat";
+        string path = Application.persistentDataPath + playerInfoPath;
         if (File.Exists(path))
         {
             BinaryFormatter bf = new BinaryFormatter();
@@ -143,6 +144,16 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("Save file not found");
         }
         
+    }
+
+    public void ResetGame()
+    {
+        playerName = " ";
+        Health = 0;
+        Xp = 0;
+        Score = 0;
+        Coins = 0;
+        Lives = 0;
     }
 }
 // This let the data made into a file

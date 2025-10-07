@@ -22,6 +22,16 @@ public class Singleton<Type> : MonoBehaviour where Type : MonoBehaviour
 
     private void Awake()
     {
+        InstanceCheck();
+    }
+
+    private void Start()
+    {
+        InstanceCheck();
+    }
+
+    void InstanceCheck()
+    {
         if (instance != null)
         {
             Destroy(this.gameObject);
